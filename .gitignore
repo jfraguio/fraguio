@@ -90,3 +90,6 @@ jspm_packages/
 # Windows
 Thumbs.db
 ehthumbs.db
+
+# Private npm configurations (keep only the public registry config)
+.npmrc.local
