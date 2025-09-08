@@ -1,0 +1,292 @@
+/* Reset y estilos base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #fff;
+  color: #111;
+  font-family: 'Times New Roman', 'Times', serif;
+  line-height: 1.7;
+  font-size: clamp(16px, 2.5vw, 18px);
+}
+
+/* Contenedor principal */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding-inline: clamp(16px, 5vw, 64px);
+  padding-block: 2rem;
+}
+
+/* Cabecera */
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.site-title {
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: normal;
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+}
+
+/* Lista horizontal de entradas fijadas */
+.pinned-posts {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+  margin-bottom: 3rem;
+  scroll-behavior: smooth;
+}
+
+.pinned-posts::-webkit-scrollbar {
+  height: 4px;
+}
+
+.pinned-posts::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.pinned-posts::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
+.pinned-chip {
+  flex-shrink: 0;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #111;
+  background: transparent;
+  color: #111;
+  text-decoration: none;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.pinned-chip:hover,
+.pinned-chip:focus {
+  background: #111;
+  color: #fff;
+  outline: none;
+}
+
+/* Entradas del feed */
+.posts-feed {
+  margin-bottom: 2rem;
+}
+
+.post-item {
+  margin-bottom: 3rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 2rem;
+}
+
+.post-item:last-child {
+  border-bottom: none;
+}
+
+.post-title {
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+  font-weight: normal;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  color: #111;
+  text-decoration: none;
+}
+
+.post-title:hover {
+  color: #333;
+}
+
+.post-content {
+  margin-bottom: 1rem;
+  white-space: pre-line;
+}
+
+.post-content p {
+  text-indent: 1.5em;
+  margin: 0 0 1rem 0;
+}
+
+.post-date {
+  font-size: 0.9rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* Página individual de post */
+.post-detail {
+  margin-bottom: 2rem;
+}
+
+.post-detail .post-title {
+  margin-bottom: 0.5rem;
+  cursor: default;
+}
+
+.post-detail .post-date {
+  margin-bottom: 2rem;
+}
+
+.post-detail .post-content {
+  margin-bottom: 0;
+}
+
+/* Sentinel para scroll infinito */
+.scroll-sentinel {
+  height: 20px;
+  margin: 2rem 0;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 2rem 0;
+  color: #666;
+  font-style: italic;
+}
+
+/* Admin form */
+.admin-form {
+  margin-top: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: normal;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #111;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.4;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.form-textarea {
+  min-height: 300px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-checkbox {
+  width: auto;
+  margin: 0;
+}
+
+.form-submit {
+  background: #111;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  min-height: 44px;
+}
+
+.form-submit:hover {
+  background: #333;
+}
+
+.form-submit:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Navegación */
+.nav-link {
+  color: #111;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 2rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid transparent;
+}
+
+.nav-link:hover {
+  border-bottom-color: #111;
+}
+
+/* Mensajes de error */
+.error-message {
+  color: #d00;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #d00;
+  background: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding-block: 1rem;
+  }
+  
+  .header {
+    margin-bottom: 2rem;
+  }
+  
+  .site-title {
+    margin-bottom: 1.5rem;
+  }
+  
+  .pinned-posts {
+    margin-bottom: 2rem;
+  }
+  
+  .post-item {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+  }
+}
+
+/* Impresión */
+@media print {
+  .pinned-posts,
+  .scroll-sentinel,
+  .admin-form {
+    display: none;
+  }
+  
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+  
+  .post-item {
+    break-inside: avoid;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #ccc;
+  }
+}
