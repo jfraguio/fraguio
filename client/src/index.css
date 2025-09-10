@@ -8,7 +8,7 @@
 body {
   background: #fff;
   color: #111;
-  font-family: 'Times New Roman', 'Times', serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   line-height: 1.7;
   font-size: clamp(16px, 2.5vw, 18px);
 }
@@ -28,10 +28,10 @@ body {
 }
 
 .site-title {
-  font-size: clamp(2rem, 6vw, 3rem);
-  font-weight: normal;
-  letter-spacing: 0.1em;
+  font-size: 3rem;
+  font-weight: bold;
   margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 /* Lista horizontal de entradas fijadas */
@@ -60,12 +60,11 @@ body {
 .pinned-chip {
   flex-shrink: 0;
   padding: 0.25rem 0.5rem;
-  border: 1px solid #111;
   background: transparent;
   color: #111;
   text-decoration: none;
   white-space: nowrap;
-  font-size: 0.9rem;
+  font-size: 1rem;
   min-height: 40px;
   display: flex;
   align-items: center;
@@ -88,7 +87,7 @@ body {
 .post-item {
   margin-bottom: 3rem;
   border-bottom: 1px solid #eee;
-  padding-bottom: 2rem;
+  padding-bottom: 3rem;
 }
 
 .post-item:last-child {
@@ -97,8 +96,7 @@ body {
 
 .post-title {
   font-size: clamp(1.25rem, 4vw, 1.5rem);
-  font-weight: normal;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   cursor: pointer;
   color: #111;
   text-decoration: none;
@@ -110,6 +108,7 @@ body {
 
 .post-content {
   margin-bottom: 1rem;
+  margin-top: 1rem;
   white-space: pre-line;
 }
 
@@ -122,6 +121,7 @@ body {
   font-size: 0.9rem;
   color: #666;
   font-style: italic;
+  float: right;
 }
 
 /* Página individual de post */
@@ -267,7 +267,7 @@ body {
   
   .post-item {
     margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
+    padding-bottom: 2.5rem;
   }
 }
 

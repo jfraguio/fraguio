@@ -47,7 +47,7 @@ function PostDetail() {
   if (error) {
     return (
       <div>
-        <Link to="/" className="nav-link">← Volver al inicio</Link>
+        <Link to="/" className="nav-link">←</Link>
         <div className="error-message">
           Error: {error}
         </div>
@@ -57,16 +57,16 @@ function PostDetail() {
 
   return (
     <>
-      <Link to="/" className="nav-link">← Volver al inicio</Link>
+      <Link to="/" className="nav-link">←</Link>
       
       <article className="post-detail">
-        <h1 className="post-title">{post.title}</h1>
-        <time className="post-date">
-          {formatDate(post.created_at)}
-        </time>
+        <label className="post-title">{post.title}</label>
         <div className="post-content">
           {formatContent(post.content)}
         </div>
+        <time className="post-date">
+          {formatDate(post.created_at)}
+        </time>
       </article>
     </>
   )

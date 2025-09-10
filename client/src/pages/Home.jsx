@@ -81,7 +81,7 @@ function Home() {
   return (
     <>
       <header className="header">
-        <h1 className="site-title">FRAGUÍO</h1>
+        <h1 className="site-title">Fraguío</h1>
         
         {pinnedPosts.length > 0 && (
           <nav className="pinned-posts">
@@ -102,7 +102,7 @@ function Home() {
         {posts.map(post => (
           <article key={post.id} className="post-item">
             <Link to={`/post/${post.id}`} className="post-title">
-              <h2>{post.title}</h2>
+              <label>{post.title}</label>
             </Link>
             <div className="post-content">
               {formatContent(post.content)}

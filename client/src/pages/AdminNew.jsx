@@ -60,7 +60,7 @@ function AdminNew() {
 
   return (
     <>
-      <Link to="/" className="nav-link">← Volver al inicio</Link>
+      <Link to="/" className="nav-link">←</Link>
       
       <header className="header">
         <h1 className="site-title">Nueva Entrada</h1>
