@@ -140,18 +140,18 @@ app.post('/api/posts', requireAuth, (req, res) => {
   );
 });
 
-// Admin route protection
-app.get('/admin/new', requireAuth, (req, res, next) => {
-  next();
-});
-
 // Servir archivos estáticos del build
 const clientBuildPath = path.join(__dirname, '..', 'client', 'dist');
 app.use(express.static(clientBuildPath));
 
+// Admin route protection
+app.get('/admin/new', requireAuth, (req, res) => {
+  res.sendFile(path.join(clientBuildPath, 'index.html'));
+});
+
 // Servir index.html para todas las rutas no API
 app.get('*', (req, res) => {
-  if (!req.path.startsWith('/api') && !req.path.startsWith('/admin')) {
+  if (!req.path.startsWith('/api')) {
     res.sendFile(path.join(clientBuildPath, 'index.html'));
   }
 });
