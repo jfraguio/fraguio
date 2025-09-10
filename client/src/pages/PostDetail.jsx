@@ -41,7 +41,7 @@ function PostDetail() {
   }, [id])
 
   if (loading) {
-    return <div className="loading">Cargando entrada...</div>
+    return <div className="loading">...</div>
   }
 
   if (error) {

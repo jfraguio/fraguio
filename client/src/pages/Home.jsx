@@ -118,7 +118,7 @@ function Home() {
         )}
         
         {loading && (
-          <div className="loading">Cargando más entradas...</div>
+          <div className="loading">...</div>
         )}
       </main>
     </>
