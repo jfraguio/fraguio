@@ -140,12 +140,70 @@ app.post('/api/posts', requireAuth, (req, res) => {
   );
 });
 
+app.put('/api/posts/:id', requireAuth, (req, res) => {
+  const { id } = req.params;
+  const { title, content, is_pinned } = req.body;
+  
+  if (!title || !content) {
+    return res.status(400).json({ error: 'Title and content are required' });
+  }
+  
+  db.run(
+    'UPDATE posts SET title = ?, content = ?, is_pinned = ? WHERE id = ?',
+    [title, content, is_pinned ? 1 : 0, id],
+    function(err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+      
+      db.get(
+        'SELECT id, title, content, created_at, is_pinned FROM posts WHERE id = ?',
+        [id],
+        (err, row) => {
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
+          res.json(row);
+        }
+      );
+    }
+  );
+});
+
+app.delete('/api/posts/:id', requireAuth, (req, res) => {
+  const { id } = req.params;
+  
+  db.run(
+    'DELETE FROM posts WHERE id = ?',
+    [id],
+    function(err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+      
+      res.json({ message: 'Post deleted successfully', id: id });
+    }
+  );
+});
+
 // Servir archivos estáticos del build
 const clientBuildPath = path.join(__dirname, '..', 'client', 'dist');
 app.use(express.static(clientBuildPath));
 
 // Admin route protection
 app.get('/admin/new', requireAuth, (req, res) => {
+  res.sendFile(path.join(clientBuildPath, 'index.html'));
+});
+
+app.get('/admin/edit/:id', requireAuth, (req, res) => {
   res.sendFile(path.join(clientBuildPath, 'index.html'));
 });
 

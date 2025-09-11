@@ -224,6 +224,32 @@ body {
   cursor: not-allowed;
 }
 
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.form-delete {
+  background: #d00;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  min-height: 44px;
+}
+
+.form-delete:hover {
+  background: #a00;
+}
+
+.form-delete:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
 /* Navegación */
 .nav-link {
   color: #111;
