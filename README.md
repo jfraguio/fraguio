@@ -43,6 +43,7 @@ npm start
 - **Home**: `/` - Lista de entradas con fijadas horizontales
 - **Detalle**: `/post/:id` - Entrada individual
 - **Admin**: `/admin/new` - Crear nueva entrada (requiere autenticación)
+- **Edición**: `/admin/edit/:id` - Editar/eliminar entrada (requiere autenticación)
 
 ## API
 
@@ -50,12 +51,14 @@ npm start
 - `GET /api/pinned` - Entradas fijadas
 - `GET /api/posts/:id` - Entrada específica
 - `POST /api/posts` - Crear entrada (requiere Basic Auth)
+- `PUT /api/posts/:id` - Actualizar entrada (requiere Basic Auth)
+- `DELETE /api/posts/:id` - Eliminar entrada (requiere Basic Auth)
 
 ## Autenticación
 
 - **Usuario**: cualquiera
 - **Password**: `[REDACTED]`
-- Protege `/admin/new` y `POST /api/posts`
+- Protege `/admin/new`, `/admin/edit/:id` y rutas API de modificación
 
 ## Base de Datos
 
