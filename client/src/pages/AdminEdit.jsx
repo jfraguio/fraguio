@@ -67,8 +67,21 @@ function AdminEdit() {
       }
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Error al actualizar la entrada')
+        let errorMessage = 'Error al actualizar la entrada'
+        try {
+          const errorData = await response.json()
+          errorMessage = errorData.error || errorMessage
+        } catch (jsonError) {
+          // Si no puede parsear JSON, probablemente el servidor devolvió HTML de error
+          if (response.status === 413) {
+            errorMessage = 'El contenido es demasiado largo. Intenta reducir el tamaño.'
+          } else if (response.status >= 500) {
+            errorMessage = 'Error interno del servidor. Intenta de nuevo más tarde.'
+          } else {
+            errorMessage = `Error del servidor (${response.status})`
+          }
+        }
+        throw new Error(errorMessage)
       }
 
       // Éxito: redirigir al post actualizado
@@ -99,8 +112,19 @@ function AdminEdit() {
       }
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Error al eliminar la entrada')
+        let errorMessage = 'Error al eliminar la entrada'
+        try {
+          const errorData = await response.json()
+          errorMessage = errorData.error || errorMessage
+        } catch (jsonError) {
+          // Si no puede parsear JSON, probablemente el servidor devolvió HTML de error
+          if (response.status >= 500) {
+            errorMessage = 'Error interno del servidor. Intenta de nuevo más tarde.'
+          } else {
+            errorMessage = `Error del servidor (${response.status})`
+          }
+        }
+        throw new Error(errorMessage)
       }
 
       // Éxito: redirigir al inicio

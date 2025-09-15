@@ -14,7 +14,8 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '[REDACTED]';
 const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 
 // Middlewares
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cors());
 
 // Crear directorio data si no existe
