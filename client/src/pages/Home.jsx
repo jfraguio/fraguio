@@ -99,19 +99,21 @@ function Home() {
       </header>
 
       <main className="posts-feed">
-        {posts.map(post => (
-          <article key={post.id} className="post-item">
-            <Link to={`/post/${post.id}`} className="post-title">
-              <label>{post.title}</label>
-            </Link>
-            <div className="post-content">
-              {formatContent(post.content)}
-            </div>
-            <time className="post-date">
-              {formatDate(post.created_at)}
-            </time>
-          </article>
-        ))}
+        {posts
+          .filter(post => !pinnedPosts.some(pinned => pinned.id === post.id))
+          .map(post => (
+            <article key={post.id} className="post-item">
+              <Link to={`/post/${post.id}`} className="post-title">
+                <label>{post.title}</label>
+              </Link>
+              <div className="post-content">
+                {formatContent(post.content)}
+              </div>
+              <time className="post-date">
+                {formatDate(post.created_at)}
+              </time>
+            </article>
+          ))}
         
         {hasMore && (
           <div ref={sentinelRef} className="scroll-sentinel" />
