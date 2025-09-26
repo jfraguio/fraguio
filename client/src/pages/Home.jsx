@@ -7,6 +7,7 @@ function Home() {
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const [offset, setOffset] = useState(0)
+  const [showContent, setShowContent] = useState(true)
   const observerRef = useRef()
 
   const formatDate = (dateString) => {
@@ -78,10 +79,14 @@ function Home() {
     if (node) observerRef.current.observe(node)
   }, [loading, hasMore, loadPosts])
 
+  const toggleContent = () => {
+    setShowContent(prev => !prev)
+  }
+
   return (
     <>
       <header className="header">
-        <h1 className="site-title">Fraguío</h1>
+        <h1 className="site-title" onClick={toggleContent} style={{ cursor: 'pointer' }}>Fraguío</h1>
         
         {pinnedPosts.length > 0 && (
           <nav className="pinned-posts">
@@ -104,9 +109,11 @@ function Home() {
             <Link to={`/post/${post.id}`} className="post-title">
               <label>{post.title}</label>
             </Link>
-            <div className="post-content">
-              {formatContent(post.content)}
-            </div>
+            {showContent && (
+              <div className="post-content">
+                {formatContent(post.content)}
+              </div>
+            )}
             <time className="post-date">
               {formatDate(post.created_at)}
             </time>
