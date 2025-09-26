@@ -83,6 +83,10 @@ function Home() {
     setShowContent(prev => !prev)
   }
 
+  // Filtrar posts fijados del feed principal
+  const pinnedPostIds = pinnedPosts.map(post => post.id)
+  const filteredPosts = posts.filter(post => !pinnedPostIds.includes(post.id))
+
   return (
     <>
       <header className="header">
@@ -104,7 +108,7 @@ function Home() {
       </header>
 
       <main className="posts-feed">
-        {posts.map(post => (
+        {filteredPosts.map(post => (
           <article key={post.id} className="post-item">
             <Link to={`/post/${post.id}`} className="post-title">
               <label>{post.title}</label>
