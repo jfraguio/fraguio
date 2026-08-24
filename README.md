@@ -33,10 +33,18 @@ node scripts/build-index.mjs   # tras añadir/editar posts
 Abre `index.html` directamente en el navegador (doble click) o sirve con
 `python3 -m http.server 8642`.
 
-## Publicación (próximamente)
+## Publicación
 
-Google Form → Google Sheet → GitHub Action (cada 15 min) que genera los
-markdowns, regenera `posts.js`/`posts.json` y hace commit. La entrada se
+Nueva crítica → [formulario](https://docs.google.com/forms/d/e/1FAIpQLSeqxXUGhrEKCw7IuRS8zhExGO1zo4aZNHFc0ZKhaaF9wmODaA/viewform)
+
+Google Form → Google Sheet (publicada como CSV) → GitHub Action
+([sync-posts.yml](.github/workflows/sync-posts.yml), cada 5 min) que genera los
+markdowns nuevos, regenera `posts.js`/`posts.json` y hace commit. La entrada se
 identifica por slug derivado de **título + autor** (👾 → `alien`, 🐧 →
-`pinguino`); una nueva respuesta con el mismo título y autor sobrescribe, y una
-operación de borrado por slug la elimina.
+`pinguino`); una fila con un slug ya existente se ignora.
+
+Para forzar la actualización sin esperar al cron:
+
+```sh
+gh workflow run sync-posts.yml --repo jfraguio/fraguio
+```
