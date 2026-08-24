@@ -1,75 +1,42 @@
-# FRAGUÍO - Blog Personal
+# Fraguío
 
-Blog personal minimalista con arquitectura fullstack en un único repositorio.
+Blog de reseñas de cine. Sitio 100% estático, pensado para GitHub Pages.
 
-## Tecnologías
+## Estructura
 
-- **Backend**: Node.js 20 + Express
-- **Frontend**: React + Vite
-- **Base de datos**: SQLite
-- **Puerto**: 3123 (o dinámico si está ocupado)
+- `index.html`, `app.js`, `styles.css` — el sitio (sin build, sin dependencias locales; `marked` por CDN).
+- `posts/*.md` — las entradas. Nombre de fichero: `año-mes-autor-título.md`
+  (ej. `2026-07-alien-the-odyssey-2026.md`; sin autor se omite). La identidad
+  del post (slug) se deriva del frontmatter (título + autor), no del nombre.
+  Frontmatter:
 
-## Setup Inicial
+  ```
+  ---
+  title: Título (Año)
+  rating: 4          # 0-5 estrellas
+  author: 👾         # opcional
+  date: 2026-07-25   # se muestra solo mes y año
+  ---
 
-```bash
-# Instalar dependencias del backend y frontend
-npm run setup
+  Contenido en markdown...
+  ```
 
-# Opcional: poblar base de datos con entradas ficticias
-npm run seed
+- `posts.js` / `posts.json` — artefactos generados a partir de `posts/*.md`. No editar a mano.
+- `scripts/build-index.mjs` — los regenera.
+
+## Desarrollo local
+
+```sh
+node scripts/build-index.mjs   # tras añadir/editar posts
 ```
 
-## Desarrollo
+Abre `index.html` directamente en el navegador (doble click) o sirve con
+`python3 -m http.server 8642`.
 
-```bash
-# Construir frontend y iniciar servidor
-npm run dev
+## Publicación (próximamente)
 
-# La aplicación estará disponible en http://localhost:3123 (o el puerto que se muestre)
-```
-
-## Producción
-
-```bash
-# Construir frontend
-npm run build
-
-# Iniciar servidor de producción
-npm start
-```
-
-## Rutas
-
-- **Home**: `/` - Lista de entradas con fijadas horizontales
-- **Detalle**: `/post/:id` - Entrada individual
-- **Admin**: `/admin/new` - Crear nueva entrada (requiere autenticación)
-- **Edición**: `/admin/edit/:id` - Editar/eliminar entrada (requiere autenticación)
-
-## API
-
-- `GET /api/posts?offset=0&limit=50` - Lista paginada de entradas
-- `GET /api/pinned` - Entradas fijadas
-- `GET /api/posts/:id` - Entrada específica
-- `POST /api/posts` - Crear entrada (requiere Basic Auth)
-- `PUT /api/posts/:id` - Actualizar entrada (requiere Basic Auth)
-- `DELETE /api/posts/:id` - Eliminar entrada (requiere Basic Auth)
-
-## Autenticación
-
-- **Usuario**: cualquiera
-- **Password**: `[REDACTED]`
-- Protege `/admin/new`, `/admin/edit/:id` y rutas API de modificación
-
-## Base de Datos
-
-SQLite en `./data/blog.sqlite3` (se crea automáticamente)
-
-## Características
-
-- ✅ **Minimalista**: Diseño blanco y negro, tipografía serif
-- ✅ **Responsive**: Funciona perfecto en móvil y desktop
-- ✅ **Scroll infinito**: Carga automática de más entradas
-- ✅ **Posts fijados**: Lista horizontal en la cabecera
-- ✅ **Autenticación básica**: Protección de rutas admin
-- ✅ **Sangría en párrafos**: Estilo literario clásico
-- ✅ **Fechas en español**: Formato "septiembre de 2025"
+Google Form → Google Sheet → GitHub Action (cada 15 min) que genera los
+markdowns, regenera `posts.js`/`posts.json` y hace commit. La entrada se
+identifica por slug derivado de **título + autor** (👾 → `alien`, 🐧 →
+`pinguino`); una nueva respuesta con el mismo título y autor sobrescribe, y una
+operación de borrado por slug la elimina.

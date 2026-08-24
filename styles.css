@@ -1,0 +1,223 @@
+/* Reset y estilos base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #fff;
+  color: #111;
+  font-family: Charter, Georgia, "Times New Roman", serif;
+  line-height: 1.7;
+  font-size: clamp(16px, 2.5vw, 18px);
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #f0e6d2;
+}
+
+/* Contenedor principal */
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding-inline: clamp(16px, 5vw, 64px);
+  padding-block: 2rem;
+}
+
+/* Cabecera */
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.site-title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  cursor: pointer;
+}
+
+.site-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-subtitle {
+  font-size: 0.9rem;
+  color: #999;
+  margin-top: -2rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Filtro de autores */
+.author-filter {
+  font-size: 1.1rem;
+  margin-top: -1rem;
+}
+
+.author-link {
+  text-decoration: none;
+  filter: grayscale(1);
+  opacity: 0.45;
+  transition: opacity 0.15s, filter 0.15s;
+}
+
+.author-link:hover {
+  opacity: 0.8;
+}
+
+.author-link.is-active,
+.author-filter:not(:has(.is-active)) .author-link {
+  filter: none;
+  opacity: 1;
+}
+
+/* Entradas del feed */
+.posts-feed {
+  margin-bottom: 2rem;
+}
+
+.post-item {
+  margin-bottom: 3rem;
+  border-bottom: 1px solid #eee;
+}
+
+.post-item:last-child {
+  border-bottom: none;
+}
+
+.post-title {
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+  margin-bottom: 0.35rem;
+  cursor: pointer;
+  color: #111;
+  text-decoration: none;
+  font-weight: bold;
+  display: block;
+}
+
+.post-title:hover {
+  color: #333;
+}
+
+.post-content {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.post-content p {
+  margin: 0 0 1rem 0;
+}
+
+.post-content ol,
+.post-content ul {
+  margin: 0 0 1rem 1.5em;
+}
+
+.post-content a {
+  color: #111;
+}
+
+.more-link {
+  font-size: 0.9rem;
+  color: #666 !important;
+  text-decoration: none;
+}
+
+.more-link:hover {
+  text-decoration: underline;
+}
+
+.post-meta {
+  display: block;
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.post-stars {
+  font-style: normal;
+  letter-spacing: 0.1em;
+}
+
+.post-author {
+  font-style: normal;
+}
+
+/* Página individual de post */
+.post-detail {
+  margin-bottom: 2rem;
+}
+
+.post-detail .post-title {
+  margin-bottom: 0.5rem;
+  cursor: default;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 2rem 0;
+  color: #666;
+  font-style: italic;
+}
+
+/* Navegación */
+.nav-link {
+  color: #111;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 2rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid transparent;
+}
+
+.nav-link:hover {
+  border-bottom-color: #111;
+}
+
+/* Mensajes de error */
+.error-message {
+  color: #d00;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #d00;
+  background: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding-block: 1rem;
+  }
+
+  .header {
+    margin-bottom: 2rem;
+  }
+
+  .site-title {
+    margin-bottom: 1.5rem;
+  }
+
+  .post-item {
+    margin-bottom: 2rem;
+  }
+}
+
+/* Impresión */
+@media print {
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .post-item {
+    break-inside: avoid;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #ccc;
+  }
+}
