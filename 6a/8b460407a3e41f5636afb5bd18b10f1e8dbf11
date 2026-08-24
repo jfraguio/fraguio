@@ -1,0 +1,95 @@
+posts.js
+  s_228d4958aa268f::t_431d4ad3d81c43 1-299
+posts.json
+  s_228d4958aa268f::t_b677fe3624a770 1-298
+posts/2026-02-28-years-later-the-bone-temple-2026.md
+  s_228d4958aa268f::t_32b40a1d3a1c50 1-12
+posts/2026-02-aida-y-vuelta-2025.md
+  s_228d4958aa268f::t_7131231ed3edb4 1-8
+posts/2026-02-enemy-2013.md
+  s_228d4958aa268f::t_a6b5eede1f7e67 1-10
+posts/2026-02-knives-out-3-2025.md
+  s_228d4958aa268f::t_f55b91b8561855 1-12
+posts/2026-02-marty-supreme-2025.md
+  s_228d4958aa268f::t_4a2fd3ce4d2377 1-12
+posts/2026-02-prey-2022.md
+  s_228d4958aa268f::t_1e76ab25839331 1-12
+posts/2026-02-puppet-master-the-littlest-reich-2018.md
+  s_228d4958aa268f::t_1d60738727a649 1-12
+posts/2026-02-sisu-road-to-revenge-2025.md
+  s_228d4958aa268f::t_e15c3f199edada 1-10
+posts/2026-02-teenage-mutant-ninja-turtles-mutant-mayhem-2023.md
+  s_228d4958aa268f::t_ef536e36a7cff2 1-6,8,10
+posts/2026-02-the-long-walk-2025.md
+  s_228d4958aa268f::t_5f1b5a8407537e 1-12
+posts/2026-02-the-unbearable-weight-of-massive-talent-2022.md
+  s_228d4958aa268f::t_0a8a047fe7c7bb 1-10
+posts/2026-02-those-who-wish-me-dead-2021.md
+  s_228d4958aa268f::t_dc1a7fca2c200f 1-16
+posts/2026-02-wolf-man-2025.md
+  s_228d4958aa268f::t_654cc31fc5d422 1-10
+posts/2026-03-caught-stealing-2025.md
+  s_228d4958aa268f::t_c4a189470adb6f 1-12
+posts/2026-03-project-hail-mary-2026.md
+  s_228d4958aa268f::t_4bb5e6d60f4ffa 1-18
+posts/2026-03-the-naked-gun-2025.md
+  s_228d4958aa268f::t_b570ff6756372c 1-10
+posts/2026-04-pinguino-hamnet-2025.md
+  s_228d4958aa268f::t_904d6000f1870b 1-6,8,10,12,14-18
+posts/2026-04-pinguino-the-covenant-2023.md
+  s_228d4958aa268f::t_c617027fa5f389 1-14
+posts/2026-04-pinguino-train-dreams-2025.md
+  s_228d4958aa268f::t_120a0948cd48ab 1-16
+posts/2026-05-alien-nobody-2021.md
+  s_228d4958aa268f::t_1d30d8aefd0ded 1-12
+posts/2026-05-alien-pearl-2022.md
+  s_228d4958aa268f::t_6092ba00f117a6 1-14
+posts/2026-05-alien-primate-2025.md
+  s_228d4958aa268f::t_aa5ff74d364fbf 1-14
+posts/2026-05-alien-send-help-2026.md
+  s_228d4958aa268f::t_3cc73af9a3da21 1-18
+posts/2026-05-alien-thirteen-lives-2022.md
+  s_228d4958aa268f::t_b48ff152122265 1-12
+posts/2026-05-pinguino-love-lies-bleeding-2024.md
+  s_228d4958aa268f::t_8929953006c3c1 1-16
+posts/2026-05-pinguino-the-rescue-2021.md
+  s_228d4958aa268f::t_e97acef794ef49 1-20
+posts/2026-06-alien-backrooms-2026.md
+  s_228d4958aa268f::t_75b306682a9b64 1-18
+posts/2026-06-alien-disclosure-day-2026.md
+  s_228d4958aa268f::t_170d54c9f02508 1-6,8,10,12,14
+posts/2026-06-alien-mr-nobody-against-putin-2026.md
+  s_228d4958aa268f::t_8963536dc80f10 1-16
+posts/2026-06-alien-obsession-2026.md
+  s_228d4958aa268f::t_00e97285c3d8b0 1-16
+posts/2026-06-pinguino-send-help-2026.md
+  s_228d4958aa268f::t_b616c52380d826 1-22
+posts/2026-06-pinguino-the-rip-2026.md
+  s_228d4958aa268f::t_54def3ed623288 1-20
+posts/2026-07-alien-decision-to-leave-2022.md
+  s_228d4958aa268f::t_18ccab753323b0 1-16
+posts/2026-07-alien-the-odyssey-2026.md
+  s_228d4958aa268f::t_ba642bb5bfedd6 1-6,8,10,12,14,16,18,20,22,24,26,28,30,32,34
+posts/2026-07-alien-train-dreams-2025.md
+  s_228d4958aa268f::t_3d67688e1bbf5e 1-14
+posts/2026-07-pinguino-akira-1988.md
+  s_228d4958aa268f::t_b0f56bd74bb62c 1-6,8,10,12,14,16,18
+posts/2026-07-pinguino-la-odisea-2026.md
+  s_228d4958aa268f::t_94b409f18db61a 1-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "6a8b460407a3e41f5636afb5bd18b10f1e8dbf11",
+  "prompts": {},
+  "sessions": {
+    "s_228d4958aa268f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fcb80468fffeKuVwhx8DRw2jrN",
+        "model": "claude-fable-5"
+      },
+      "human_author": "franciscojfc <franciscojfc@inditex.com>"
+    }
+  }
+}
