@@ -17,7 +17,7 @@
   }
 
   function renderMarkdown(md) {
-    return marked.parse(md, { breaks: false });
+    return marked.parse(md, { breaks: true });
   }
 
   const EXCERPT_WORDS = 50;
