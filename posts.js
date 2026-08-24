@@ -3,10 +3,10 @@ window.POSTS = [
   {
     "slug": "prueba-2-2002-alien",
     "title": "Prueba 2 (2002)",
-    "rating": 2,
+    "rating": 5,
     "author": "👾",
     "date": "2026-08-24",
-    "content": "Prueba 3"
+    "content": "FUERA!"
   },
   {
     "slug": "the-odyssey-2026-alien",
