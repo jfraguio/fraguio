@@ -22,7 +22,7 @@ jobs:
 
       - name: Esperar a que Google refresque el CSV publicado
         if: github.event_name == 'repository_dispatch'
-        run: sleep 90
+        run: sleep 180
 
       - uses: actions/setup-node@v4
         with:
