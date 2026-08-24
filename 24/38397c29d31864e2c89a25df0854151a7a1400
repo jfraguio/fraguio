@@ -1,0 +1,27 @@
+.gitignore
+  s_228d4958aa268f::t_60c28a29d7da4a 1
+index.html
+  s_228d4958aa268f::t_75493ebced95fb 9
+posts.js
+  s_228d4958aa268f::t_1cca6a69b72acc 3-10
+posts.json
+  s_228d4958aa268f::t_fd3615c9a7b928 2-9
+posts/2026-08-alien-prueba-2-2002.md
+  s_228d4958aa268f::t_42d3a12575e3b8 1-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "2438397c29d31864e2c89a25df0854151a7a1400",
+  "prompts": {},
+  "sessions": {
+    "s_228d4958aa268f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fcb80468fffeKuVwhx8DRw2jrN",
+        "model": "claude-fable-5"
+      },
+      "human_author": "franciscojfc <franciscojfc@inditex.com>"
+    }
+  }
+}
