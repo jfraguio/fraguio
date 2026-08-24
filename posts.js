@@ -1,14 +1,6 @@
 // Generado por scripts/build-index.mjs — no editar a mano.
 window.POSTS = [
   {
-    "slug": "test-2026-alien",
-    "title": "TEST (2026)",
-    "rating": 5,
-    "author": "👾",
-    "date": "2026-08-24",
-    "content": "THIS IS A TEST.\nA TEST.\n\nTEST. TEST."
-  },
-  {
     "slug": "the-odyssey-2026-alien",
     "title": "The Odyssey (2026)",
     "rating": 3,
