@@ -4,6 +4,7 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const postsDir = join(root, 'posts');
@@ -65,6 +66,15 @@ posts.sort((a, b) => b.date.localeCompare(a.date));
 const json = JSON.stringify(posts, null, 2);
 writeFileSync(join(root, 'posts.json'), json + '\n');
 writeFileSync(join(root, 'posts.js'), `// Generado por scripts/build-index.mjs — no editar a mano.\nwindow.POSTS = ${json};\n`);
+
+// Cache-busting: versionar las referencias en index.html con un hash del
+// contenido, para que el navegador descargue los archivos solo cuando cambian.
+const hash = (file) => createHash('sha256').update(readFileSync(join(root, file))).digest('hex').slice(0, 8);
+let html = readFileSync(join(root, 'index.html'), 'utf8');
+for (const file of ['posts.js', 'app.js', 'styles.css']) {
+  html = html.replace(new RegExp(`(["'])${file.replace('.', '\\.')}(\\?v=[a-f0-9]*)?(["'])`), `$1${file}?v=${hash(file)}$3`);
+}
+writeFileSync(join(root, 'index.html'), html);
 console.log(`posts.json y posts.js generados con ${posts.length} entradas.`);
 }
 
