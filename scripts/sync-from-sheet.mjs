@@ -1,8 +1,10 @@
 #!/usr/bin/env node
-// Sincroniza críticas desde la hoja de Google Sheets (publicada como CSV)
-// y genera posts/*.md para las filas que aún no existan.
+// Sincroniza críticas desde la hoja de Google Sheets (publicada como CSV):
+// - Filas nuevas -> genera posts/*.md
+// - Filas con mismo Título+Año+Autor que un post existente pero distinto
+//   contenido/nota -> archiva la versión anterior en versions/ y sobrescribe.
 // Uso: SHEET_CSV_URL=... node scripts/sync-from-sheet.mjs
-import { readdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync, existsSync, renameSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { slugFor, AUTHOR_KEYS } from './build-index.mjs';
@@ -15,6 +17,7 @@ if (!CSV_URL) {
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const postsDir = join(root, 'posts');
+const versionsDir = join(root, 'versions');
 
 // --- Parser CSV (RFC 4180: comillas, comas y saltos de línea en campos) ---
 function parseCsv(text) {
@@ -59,14 +62,18 @@ function toIsoDate(ts) {
   throw new Error(`Timestamp no reconocido: ${ts}`);
 }
 
-// Slugs ya publicados (la carpeta posts/ es el registro de lo existente)
-const existingSlugs = new Set();
+// Posts ya publicados, indexados por slug (la carpeta posts/ es el registro)
+const existing = new Map(); // slug -> { file, rating, content }
 for (const file of readdirSync(postsDir).filter(f => f.endsWith('.md'))) {
   const raw = readFileSync(join(postsDir, file), 'utf8');
-  const fm = raw.match(/^---\n([\s\S]*?)\n---/);
+  const fm = raw.match(/^---\n([\s\S]*?)\n---\n?/);
   if (!fm) continue;
   const get = (k) => (fm[1].match(new RegExp(`^${k}:(.*)$`, 'm')) || [, ''])[1].trim().replace(/^"|"$/g, '');
-  existingSlugs.add(slugFor(get('title'), get('author')));
+  existing.set(slugFor(get('title'), get('author')), {
+    file,
+    rating: Number(get('rating')) || 0,
+    content: raw.slice(fm[0].length).trim(),
+  });
 }
 
 const res = await fetch(CSV_URL, { redirect: 'follow' });
@@ -90,11 +97,25 @@ const COL = {
   critica: col('Crítica'),
 };
 
-let created = 0;
+// Saneado del texto de la crítica: colapsa espaciados múltiples y exceso de
+// saltos de línea (máximo una línea en blanco), respetando los saltos simples.
+function sanitize(text) {
+  return text
+    .replace(/\r\n?/g, '\n')            // normalizar finales de línea
+    .split('\n')
+    .map(line => line.replace(/[ \t]+/g, ' ').trim()) // espacios múltiples -> uno
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')         // 3+ saltos -> párrafo (uno en blanco)
+    .trim();
+}
+
+// Agrupar filas por slug quedándonos con la última (la hoja está en orden
+// cronológico): si se reenvía la misma crítica, gana la versión más reciente.
+const candidates = new Map(); // slug -> datos de la fila
 for (const row of rows) {
   const titulo = (row[COL.titulo] || '').trim();
   const anio = (row[COL.anio] || '').trim();
-  const critica = (row[COL.critica] || '').trim();
+  const critica = sanitize(row[COL.critica] || '');
   if (!titulo || !critica) continue; // fila incompleta: ignorar
 
   const author = (row[COL.autor] || '').trim();
@@ -102,15 +123,11 @@ for (const row of rows) {
   const date = toIsoDate((row[COL.timestamp] || '').trim());
   const title = anio ? `${titulo} (${anio})` : titulo;
   const slug = slugFor(title, author);
+  candidates.set(slug, { titulo, anio, title, author, rating, date, critica, slug });
+}
 
-  if (existingSlugs.has(slug)) continue; // ya publicado
-  existingSlugs.add(slug);
-
-  const authorKey = AUTHOR_KEYS[author] || 'anon';
-  let file = `${date.slice(0, 7)}-${authorKey}-${slugFor(titulo, '')}${anio ? '-' + anio : ''}.md`;
-  if (existsSync(join(postsDir, file))) file = `${date}-${slug}.md`;
-
-  const md = `---
+function postMd({ title, rating, author, date, critica }) {
+  return `---
 title: "${title.replace(/"/g, "'")}"
 rating: ${rating}
 author: ${author}
@@ -119,9 +136,34 @@ date: ${date}
 
 ${critica}
 `;
-  writeFileSync(join(postsDir, file), md);
+}
+
+let created = 0, updated = 0;
+for (const c of candidates.values()) {
+  const prev = existing.get(c.slug);
+
+  if (prev) {
+    // Sin cambios de contenido ni de nota: nada que hacer
+    if (prev.content === c.critica && prev.rating === c.rating) continue;
+    // Archivar la versión anterior y sobrescribir (mismo fichero, fecha nueva)
+    mkdirSync(versionsDir, { recursive: true });
+    const stamp = new Date().toISOString().replace(/[-:]/g, '').slice(0, 15); // YYYYMMDDTHHMMSS
+    const archived = prev.file.replace(/\.md$/, `-${stamp}.md`);
+    renameSync(join(postsDir, prev.file), join(versionsDir, archived));
+    writeFileSync(join(postsDir, prev.file), postMd(c));
+    console.log(`Actualizado: ${prev.file} (versión anterior en versions/${archived})`);
+    updated++;
+    continue;
+  }
+
+  const authorKey = AUTHOR_KEYS[c.author] || 'anon';
+  let file = `${c.date.slice(0, 7)}-${authorKey}-${slugFor(c.titulo, '')}${c.anio ? '-' + c.anio : ''}.md`;
+  if (existsSync(join(postsDir, file))) file = `${c.date}-${c.slug}.md`;
+  writeFileSync(join(postsDir, file), postMd(c));
   console.log(`Nuevo post: ${file}`);
   created++;
 }
 
-console.log(created ? `${created} post(s) creados.` : 'Sin novedades.');
+console.log(created || updated
+  ? `${created} post(s) creados, ${updated} actualizado(s).`
+  : 'Sin novedades.');

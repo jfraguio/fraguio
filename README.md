@@ -40,8 +40,10 @@ Nueva crítica → [formulario](https://docs.google.com/forms/d/e/1FAIpQLSeqxXUG
 Google Form → Google Sheet (publicada como CSV) → GitHub Action
 ([sync-posts.yml](.github/workflows/sync-posts.yml), cada 5 min) que genera los
 markdowns nuevos, regenera `posts.js`/`posts.json` y hace commit. La entrada se
-identifica por slug derivado de **título + autor** (👾 → `alien`, 🐧 →
-`pinguino`); una fila con un slug ya existente se ignora.
+identifica por slug derivado de **título + año + autor** (👾 → `alien`, 🐧 →
+`pinguino`). Una fila con un slug ya existente y distinto contenido o nota
+**sobrescribe** el post (la versión anterior se archiva en `versions/` con
+sufijo de timestamp); si no hay cambios, se ignora.
 
 Para forzar la actualización sin esperar al cron:
 
