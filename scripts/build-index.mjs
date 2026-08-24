@@ -37,6 +37,7 @@ export function slugFor(title, author) {
 
 const posts = [];
 const seen = new Map();
+function build() {
 for (const file of readdirSync(postsDir).filter(f => f.endsWith('.md'))) {
   const raw = readFileSync(join(postsDir, file), 'utf8');
   const { meta, content } = parseFrontmatter(raw, file);
@@ -65,3 +66,7 @@ const json = JSON.stringify(posts, null, 2);
 writeFileSync(join(root, 'posts.json'), json + '\n');
 writeFileSync(join(root, 'posts.js'), `// Generado por scripts/build-index.mjs — no editar a mano.\nwindow.POSTS = ${json};\n`);
 console.log(`posts.json y posts.js generados con ${posts.length} entradas.`);
+}
+
+// Solo ejecutar cuando se invoca directamente (no al importar slugFor/AUTHOR_KEYS)
+if (process.argv[1] === fileURLToPath(import.meta.url)) build();
