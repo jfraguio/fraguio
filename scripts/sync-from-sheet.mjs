@@ -1,13 +1,16 @@
 #!/usr/bin/env node
-// Sincroniza críticas desde la hoja de Google Sheets (publicada como CSV):
-// - Filas nuevas -> genera posts/*.md
-// - Filas con mismo Título+Año+Autor que un post existente pero distinto
-//   contenido/nota -> archiva la versión anterior en versions/ y sobrescribe.
+// Sincroniza críticas desde la hoja de Google Sheets (publicada como CSV).
+// La hoja es la fuente de verdad:
+// - Fila nueva -> genera posts/*.md
+// - Fila con mismo Título+Año+Autor pero distinto contenido/nota -> archiva
+//   la versión anterior en versions/ y sobrescribe.
+// - Post sin fila en la hoja -> se despublica (archivado en versions/),
+//   con salvaguardas contra borrados masivos accidentales.
 // Uso: SHEET_CSV_URL=... node scripts/sync-from-sheet.mjs
 import { readdirSync, readFileSync, writeFileSync, existsSync, renameSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { slugFor, AUTHOR_KEYS } from './build-index.mjs';
+import { slugFor, AUTHOR_KEYS, sanitize } from './build-index.mjs';
 
 const CSV_URL = process.env.SHEET_CSV_URL;
 if (!CSV_URL) {
@@ -97,18 +100,6 @@ const COL = {
   critica: col('Crítica'),
 };
 
-// Saneado del texto de la crítica: colapsa espaciados múltiples y exceso de
-// saltos de línea (máximo una línea en blanco), respetando los saltos simples.
-function sanitize(text) {
-  return text
-    .replace(/\r\n?/g, '\n')            // normalizar finales de línea
-    .split('\n')
-    .map(line => line.replace(/[ \t]+/g, ' ').trim()) // espacios múltiples -> uno
-    .join('\n')
-    .replace(/\n{3,}/g, '\n\n')         // 3+ saltos -> párrafo (uno en blanco)
-    .trim();
-}
-
 // Agrupar filas por slug quedándonos con la última (la hoja está en orden
 // cronológico): si se reenvía la misma crítica, gana la versión más reciente.
 const candidates = new Map(); // slug -> datos de la fila
@@ -138,7 +129,16 @@ ${critica}
 `;
 }
 
-let created = 0, updated = 0;
+let created = 0, updated = 0, removed = 0;
+const stamp = () => new Date().toISOString().replace(/[-:]/g, '').slice(0, 15); // YYYYMMDDTHHMMSS
+
+function archive(file) {
+  mkdirSync(versionsDir, { recursive: true });
+  const archived = file.replace(/\.md$/, `-${stamp()}.md`);
+  renameSync(join(postsDir, file), join(versionsDir, archived));
+  return archived;
+}
+
 for (const c of candidates.values()) {
   const prev = existing.get(c.slug);
 
@@ -146,10 +146,7 @@ for (const c of candidates.values()) {
     // Sin cambios de contenido ni de nota: nada que hacer
     if (prev.content === c.critica && prev.rating === c.rating) continue;
     // Archivar la versión anterior y sobrescribir (mismo fichero, fecha nueva)
-    mkdirSync(versionsDir, { recursive: true });
-    const stamp = new Date().toISOString().replace(/[-:]/g, '').slice(0, 15); // YYYYMMDDTHHMMSS
-    const archived = prev.file.replace(/\.md$/, `-${stamp}.md`);
-    renameSync(join(postsDir, prev.file), join(versionsDir, archived));
+    const archived = archive(prev.file);
     writeFileSync(join(postsDir, prev.file), postMd(c));
     console.log(`Actualizado: ${prev.file} (versión anterior en versions/${archived})`);
     updated++;
@@ -164,6 +161,24 @@ for (const c of candidates.values()) {
   created++;
 }
 
-console.log(created || updated
-  ? `${created} post(s) creados, ${updated} actualizado(s).`
+// --- Despublicación: post sin fila en la hoja -> archivar en versions/ ---
+if (candidates.size === 0) {
+  console.warn('Aviso: la hoja no tiene filas válidas; se omite la despublicación por seguridad.');
+} else {
+  const toRemove = [...existing.entries()].filter(([slug]) => !candidates.has(slug));
+  const MAX_ABS = 10, MAX_PCT = 0.3;
+  if (toRemove.length > MAX_ABS || toRemove.length > existing.size * MAX_PCT) {
+    console.error(`Abortado: se despublicarían ${toRemove.length} de ${existing.size} posts ` +
+      `(límites: ${MAX_ABS} o ${MAX_PCT * 100}%). Si es intencionado, hazlo por tandas o vía git.`);
+    process.exit(1);
+  }
+  for (const [, { file }] of toRemove) {
+    const archived = archive(file);
+    console.log(`Despublicado: ${file} → versions/${archived}`);
+    removed++;
+  }
+}
+
+console.log(created || updated || removed
+  ? `${created} post(s) creados, ${updated} actualizado(s), ${removed} despublicado(s).`
   : 'Sin novedades.');

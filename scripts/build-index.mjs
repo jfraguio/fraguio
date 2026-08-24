@@ -36,6 +36,18 @@ export function slugFor(title, author) {
   return base;
 }
 
+// Saneado de texto: colapsa espaciados múltiples y exceso de saltos de línea
+// (máximo una línea en blanco), respetando los saltos simples.
+export function sanitize(text) {
+  return text
+    .replace(/\r\n?/g, '\n')
+    .split('\n')
+    .map(line => line.replace(/[ \t]+/g, ' ').trim())
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
 const posts = [];
 const seen = new Map();
 function build() {
