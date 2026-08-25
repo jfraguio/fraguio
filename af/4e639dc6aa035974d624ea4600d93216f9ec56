@@ -1,0 +1,19 @@
+index.html
+  s_228d4958aa268f::t_10c06c05dedb3e 17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "af4e639dc6aa035974d624ea4600d93216f9ec56",
+  "prompts": {},
+  "sessions": {
+    "s_228d4958aa268f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_fcb80468fffeKuVwhx8DRw2jrN",
+        "model": "claude-fable-5"
+      },
+      "human_author": "franciscojfc <franciscojfc@inditex.com>"
+    }
+  }
+}
