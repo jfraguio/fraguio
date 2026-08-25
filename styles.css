@@ -189,6 +189,40 @@ body {
   background: #fff;
 }
 
+/* Página de administración */
+.admin-box form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.admin-box input {
+  font: inherit;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  flex: 1;
+  max-width: 260px;
+}
+
+.admin-box button {
+  font: inherit;
+  padding: 0.4rem 1rem;
+  border: 1px solid #111;
+  background: #fff;
+  cursor: pointer;
+}
+
+.admin-box button:hover {
+  background: #111;
+  color: #fff;
+}
+
+.admin-error {
+  color: #d00;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .container {
