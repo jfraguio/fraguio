@@ -151,46 +151,10 @@
     window.scrollTo(0, 0);
   }
 
-  function renderAdmin() {
-    app.innerHTML = `
-      <a class="nav-link" href="#/">← Volver</a>
-      <div class="admin-box">
-        <h1 class="post-title">Administración</h1>
-        <form id="admin-form">
-          <input type="password" id="admin-pass" placeholder="Contraseña" autofocus autocomplete="current-password" />
-          <button type="submit">Entrar</button>
-        </form>
-        <p id="admin-error" class="admin-error" hidden>Contraseña incorrecta.</p>
-      </div>`;
-
-    document.getElementById('admin-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const pass = document.getElementById('admin-pass').value;
-      const errorEl = document.getElementById('admin-error');
-      errorEl.hidden = true;
-      try {
-        const cfg = await (await fetch('admin.json', { cache: 'no-store' })).json();
-        const b = (s) => Uint8Array.from(atob(s), c => c.charCodeAt(0));
-        const enc = new TextEncoder();
-        const baseKey = await crypto.subtle.importKey('raw', enc.encode(pass), 'PBKDF2', false, ['deriveKey']);
-        const key = await crypto.subtle.deriveKey(
-          { name: 'PBKDF2', salt: b(cfg.salt), iterations: 310000, hash: 'SHA-256' },
-          baseKey, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
-        );
-        const url = new TextDecoder().decode(
-          await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b(cfg.iv) }, key, b(cfg.data))
-        );
-        window.location.href = url;
-      } catch {
-        errorEl.hidden = false; // AES-GCM falla la autenticación si la clave es incorrecta
-      }
-    });
-  }
-
   function route() {
     if (!posts) return;
     const hash = window.location.hash || '#/';
-    if (hash === '#/admin') return renderAdmin();
+    if (hash === '#/admin') { window.location.href = '/admin/'; return; }
     const match = hash.match(/^#\/post\/(.+)$/);
     if (match) {
       renderPost(decodeURIComponent(match[1]));
