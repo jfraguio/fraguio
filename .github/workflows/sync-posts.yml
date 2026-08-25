@@ -2,7 +2,7 @@ name: Sincronizar críticas desde Sheets
 
 on:
   schedule:
-    - cron: '*/30 * * * *' # red de seguridad (el disparo real es el repository_dispatch)
+    - cron: '*/5 * * * *' # red de seguridad (el disparo real es el repository_dispatch)
   repository_dispatch:
     types: [nueva-critica] # lanzado por el Apps Script del formulario
   workflow_dispatch: # permite lanzarlo a mano desde la pestaña Actions
