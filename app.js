@@ -164,10 +164,18 @@
 
   window.addEventListener('hashchange', route);
 
-  if (Array.isArray(window.POSTS)) {
-    posts = window.POSTS;
-    route();
-  } else {
-    app.innerHTML = '<div class="error-message">No se encontró posts.js. Ejecuta: node scripts/build-index.mjs</div>';
-  }
+  // Cargar posts.json fresco (el parámetro t evita cualquier caché de navegador
+  // o CDN). Si falla (ej. abriendo index.html vía file://), usar el posts.js
+  // embebido como respaldo.
+  fetch(`posts.json?t=${Date.now()}`, { cache: 'no-store' })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .catch(() => (Array.isArray(window.POSTS) ? window.POSTS : null))
+    .then(data => {
+      if (Array.isArray(data)) {
+        posts = data;
+        route();
+      } else {
+        app.innerHTML = '<div class="error-message">No se pudieron cargar los posts. Ejecuta: node scripts/build-index.mjs</div>';
+      }
+    });
 })();
