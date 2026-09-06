@@ -45,6 +45,13 @@ identifica por slug derivado de **título + año + autor** (👾 → `alien`, �
 **sobrescribe** el post (la versión anterior se archiva en `versions/` con
 sufijo de timestamp); si no hay cambios, se ignora.
 
+La fecha del post sale del `Timestamp` de la fila. Google Forms lo escribe según
+la configuración regional de la hoja (EE.UU. `M/D/YYYY`, España `D/M/YYYY`); el
+sync deduce el orden a partir de las filas inequívocas de la propia hoja y, si
+no hay ninguna, usa la variable `SHEET_DATE_ORDER` (`DMY`|`MDY`, por defecto
+`MDY`). Una fila con timestamp irreconocible se publica con la fecha del día y
+nunca bloquea al resto.
+
 Para forzar la actualización sin esperar al cron:
 
 ```sh

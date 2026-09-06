@@ -2,7 +2,7 @@
 title: "Piranha 3D (2010)"
 rating: 4
 author: 👾
-date: 2026-05-09
+date: 2026-09-05
 ---
 
 Los aficionados a la serie B sabemos reconocer una joya disfrazada de película cutre. Piranha 3D es el remake de Piranha (1978), una copia barata de tiburón, y sirve como homenaje sincero al cine de tiburones/cocodrilos/pirañas.

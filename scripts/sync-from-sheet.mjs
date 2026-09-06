@@ -48,21 +48,73 @@ function parseCsv(text) {
   return rows;
 }
 
-// Timestamp de Forms ("24/08/2026 12:34:56" o "8/24/2026 12:34:56") -> YYYY-MM-DD
-function toIsoDate(ts) {
-  const m = ts.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+// --- Fechas -----------------------------------------------------------------
+// En la hoja conviven dos tipos de Timestamp:
+//  a) Filas semilla (scripts/seed-sheet.mjs): "DD/MM/YYYY 0:00:00", con ceros a
+//     la izquierda. Siempre día/mes.
+//  b) Filas escritas por Google Forms: sin ceros a la izquierda y con hora
+//     real. El orden día/mes depende de la configuración regional de la hoja
+//     (EE.UU. -> M/D/YYYY, España -> D/M/YYYY).
+// Cuando ambos números son <= 12 la fila es ambigua. Para las filas de Forms
+// el orden se deduce de las filas inequívocas de la propia hoja (algún número
+// > 12); si no hay ninguna se usa SHEET_DATE_ORDER (DMY|MDY) y, en último
+// término, MDY (configuración actual de la hoja).
+// Esta función nunca lanza: si no reconoce el formato, usa la fecha de hoy y
+// avisa, para que una fila rara no bloquee la publicación del resto.
+const DATE_RE = /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/;
+
+function isSeedTimestamp(ts) {
+  const m = ts.match(DATE_RE);
+  if (!m) return false;
+  const [, a, b, , h, mi, s] = m;
+  const padded = (a.length === 2 && a[0] === '0') || (b.length === 2 && b[0] === '0');
+  const midnight = h !== undefined && Number(h) === 0 && Number(mi) === 0 && Number(s || 0) === 0;
+  return padded || midnight;
+}
+
+function detectFormsDateOrder(timestamps) {
+  let dmy = 0, mdy = 0;
+  for (const ts of timestamps) {
+    const m = ts.match(DATE_RE);
+    if (!m || isSeedTimestamp(ts)) continue;
+    const a = Number(m[1]), b = Number(m[2]);
+    if (a > 12 && b <= 12) dmy++;
+    else if (b > 12 && a <= 12) mdy++;
+  }
+  if (dmy !== mdy) return dmy > mdy ? 'DMY' : 'MDY';
+  const env = (process.env.SHEET_DATE_ORDER || '').toUpperCase();
+  if (env === 'DMY' || env === 'MDY') return env;
+  return 'MDY';
+}
+
+function validYmd(y, m, d) {
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  return dt.getUTCFullYear() === y && dt.getUTCMonth() === m - 1 && dt.getUTCDate() === d;
+}
+
+const today = () => new Date().toISOString().slice(0, 10);
+
+function toIsoDate(ts, formsOrder) {
+  const m = ts.match(DATE_RE);
   if (m) {
-    let [, a, b, y] = m;
-    // Si el primer número no puede ser mes, es formato DD/MM
-    let month, day;
-    if (Number(a) > 12) { day = a; month = b; }
-    else if (Number(b) > 12) { month = a; day = b; }
-    else { day = a; month = b; } // ambiguo: asumimos DD/MM (locale es-ES)
-    return `${y}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const a = Number(m[1]), b = Number(m[2]), y = Number(m[3]);
+    let order;
+    if (a > 12 && b <= 12) order = 'DMY';
+    else if (b > 12 && a <= 12) order = 'MDY';
+    else order = isSeedTimestamp(ts) ? 'DMY' : formsOrder;
+    const [day, month] = order === 'DMY' ? [a, b] : [b, a];
+    if (validYmd(y, month, day)) {
+      return `${y}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    }
+    // Interpretación imposible (p. ej. mes 13): probar la contraria
+    if (validYmd(y, day, month)) {
+      return `${y}-${String(day).padStart(2, '0')}-${String(month).padStart(2, '0')}`;
+    }
   }
   const d = new Date(ts);
-  if (!isNaN(d)) return d.toISOString().slice(0, 10);
-  throw new Error(`Timestamp no reconocido: ${ts}`);
+  if (ts && !isNaN(d)) return d.toISOString().slice(0, 10);
+  console.warn(`Aviso: Timestamp no reconocido '${ts}'; se usa la fecha de hoy.`);
+  return today();
 }
 
 // Posts ya publicados, indexados por slug (la carpeta posts/ es el registro)
@@ -85,9 +137,15 @@ if (!res.ok) {
   process.exit(1);
 }
 const rows = parseCsv(await res.text());
-const header = rows.shift().map(h => h.trim());
+if (rows.length === 0) {
+  console.error('El CSV está vacío (sin cabecera). Se aborta sin tocar nada.');
+  process.exit(1);
+}
+// Cabeceras tolerantes a mayúsculas, acentos y espacios ("Titulo " == "Título")
+const normalize = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase();
+const header = rows.shift().map(normalize);
 const col = (name) => {
-  const i = header.indexOf(name);
+  const i = header.indexOf(normalize(name));
   if (i === -1) throw new Error(`Columna '${name}' no encontrada. Cabecera: ${header.join(', ')}`);
   return i;
 };
@@ -100,22 +158,37 @@ const COL = {
   critica: col('Crítica'),
 };
 
+const formsDateOrder = detectFormsDateOrder(rows.map(r => (r[COL.timestamp] || '').trim()));
+console.log(`Orden día/mes de las filas de Forms: ${formsDateOrder}`);
+
 // Agrupar filas por slug quedándonos con la última (la hoja está en orden
 // cronológico): si se reenvía la misma crítica, gana la versión más reciente.
+// Ninguna fila puede abortar el sync: si una falla, se avisa y se sigue.
 const candidates = new Map(); // slug -> datos de la fila
-for (const row of rows) {
-  const titulo = (row[COL.titulo] || '').trim();
-  const anio = (row[COL.anio] || '').trim();
-  const critica = sanitize(row[COL.critica] || '');
-  if (!titulo || !critica) continue; // fila incompleta: ignorar
+rows.forEach((row, idx) => {
+  try {
+    const titulo = (row[COL.titulo] || '').trim();
+    const anio = (row[COL.anio] || '').trim();
+    const critica = sanitize(row[COL.critica] || '');
+    if (!titulo || !critica) {
+      console.warn(`Aviso: fila ${idx + 2} incompleta (sin título o sin crítica); se ignora.`);
+      return;
+    }
 
-  const author = (row[COL.autor] || '').trim();
-  const rating = Math.max(0, Math.min(5, parseInt(row[COL.estrellas], 10) || 0));
-  const date = toIsoDate((row[COL.timestamp] || '').trim());
-  const title = anio ? `${titulo} (${anio})` : titulo;
-  const slug = slugFor(title, author);
-  candidates.set(slug, { titulo, anio, title, author, rating, date, critica, slug });
-}
+    const author = (row[COL.autor] || '').trim();
+    const rating = Math.max(0, Math.min(5, parseInt(row[COL.estrellas], 10) || 0));
+    const date = toIsoDate((row[COL.timestamp] || '').trim(), formsDateOrder);
+    const title = anio ? `${titulo} (${anio})` : titulo;
+    const slug = slugFor(title, author);
+    if (!slug) {
+      console.warn(`Aviso: fila ${idx + 2} ('${titulo}') no genera un slug válido; se ignora.`);
+      return;
+    }
+    candidates.set(slug, { titulo, anio, title, author, rating, date, critica, slug });
+  } catch (err) {
+    console.warn(`Aviso: fila ${idx + 2} descartada por error: ${err.message}`);
+  }
+});
 
 function postMd({ title, rating, author, date, critica }) {
   return `---
