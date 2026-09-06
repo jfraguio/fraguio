@@ -58,7 +58,7 @@ function parseCsv(text) {
 // Cuando ambos números son <= 12 la fila es ambigua. Para las filas de Forms
 // el orden se deduce de las filas inequívocas de la propia hoja (algún número
 // > 12); si no hay ninguna se usa SHEET_DATE_ORDER (DMY|MDY) y, en último
-// término, MDY (configuración actual de la hoja).
+// término, DMY (la hoja está configurada con locale España).
 // Esta función nunca lanza: si no reconoce el formato, usa la fecha de hoy y
 // avisa, para que una fila rara no bloquee la publicación del resto.
 const DATE_RE = /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/;
@@ -84,7 +84,7 @@ function detectFormsDateOrder(timestamps) {
   if (dmy !== mdy) return dmy > mdy ? 'DMY' : 'MDY';
   const env = (process.env.SHEET_DATE_ORDER || '').toUpperCase();
   if (env === 'DMY' || env === 'MDY') return env;
-  return 'MDY';
+  return 'DMY';
 }
 
 function validYmd(y, m, d) {
