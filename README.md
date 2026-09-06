@@ -38,7 +38,8 @@ Abre `index.html` directamente en el navegador (doble click) o sirve con
 Nueva crítica → [formulario](https://docs.google.com/forms/d/e/1FAIpQLSeqxXUGhrEKCw7IuRS8zhExGO1zo4aZNHFc0ZKhaaF9wmODaA/viewform)
 
 Google Form → Google Sheet (publicada como CSV) → GitHub Action
-([sync-posts.yml](.github/workflows/sync-posts.yml), cada 5 min) que genera los
+([sync-posts.yml](.github/workflows/sync-posts.yml), al enviar el formulario y
+cada hora como respaldo) que genera los
 markdowns nuevos, regenera `posts.js`/`posts.json` y hace commit. La entrada se
 identifica por slug derivado de **título + año + autor** (👾 → `alien`, 🐧 →
 `pinguino`). Una fila con un slug ya existente y distinto contenido o nota
