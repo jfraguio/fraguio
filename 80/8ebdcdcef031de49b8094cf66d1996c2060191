@@ -1,0 +1,25 @@
+index.html
+  s_f78bf9203da889::t_8fd5f4fa52ebd8 9
+posts.js
+  s_f78bf9203da889::t_f31e559137bb4f 3-10
+posts.json
+  s_f78bf9203da889::t_4aa96e7c3c32c1 2-9
+posts/2026-09-alien-piranha-3d-2010.md
+  s_f78bf9203da889::t_1fc9d90254de76 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "808ebdcdcef031de49b8094cf66d1996c2060191",
+  "prompts": {},
+  "sessions": {
+    "s_f78bf9203da889": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f8a3b7e8fffecqyM8GWe3xdhLu",
+        "model": "claude-fable-5.1"
+      },
+      "human_author": "franciscojfc <franciscojfc@inditex.com>"
+    }
+  }
+}
