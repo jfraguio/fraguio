@@ -56,5 +56,5 @@ nunca bloquea al resto.
 Para forzar la actualización sin esperar al cron:
 
 ```sh
-gh workflow run sync-posts.yml --repo jfraguio/fraguio
+gh workflow run sync-posts.yml --repo jfraguio/movies
 ```

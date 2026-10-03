@@ -19,17 +19,6 @@
   --ease: 140ms ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #111111;
-    --fg: #d6d3cc;
-    --fg-dim: #66645f;
-    --fg-faint: #3a3936;
-    --rule: #2a2927;
-    --err: #a86b6b;
-  }
-}
-
 *,
 *::before,
 *::after {

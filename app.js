@@ -7,13 +7,15 @@
 
   function stars(rating) {
     const n = Math.max(0, Math.min(5, Number(rating) || 0));
-    return '★'.repeat(n) + '☆'.repeat(5 - n);
+    return `<span class="stars-on">${'★'.repeat(n)}</span><span class="stars-off">${'☆'.repeat(5 - n)}</span>`;
   }
+
+  const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 
   function formatDate(iso) {
     // iso: YYYY-MM or YYYY-MM-DD
     const [y, m] = iso.split('-');
-    return `${m}/${y}`;
+    return `${MONTHS[Number(m) - 1] || m} ${y}`;
   }
 
   function renderMarkdown(md) {
@@ -76,8 +78,8 @@
 
     app.innerHTML = `
       <header class="header">
-        <h1 class="site-title" id="site-title">Fraguío</h1>
         <p class="site-subtitle">Críticas de cine</p>
+        <h1 class="site-title" id="site-title">Fraguío</h1>
         ${authorFilterHtml()}
       </header>
       <main class="posts-feed" id="posts-feed"></main>
