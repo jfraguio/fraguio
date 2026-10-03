@@ -154,7 +154,7 @@
   function route() {
     if (!posts) return;
     const hash = window.location.hash || '#/';
-    if (hash === '#/admin') { window.location.href = '/admin/'; return; }
+    if (hash === '#/admin') { window.location.href = 'admin/'; return; }
     const match = hash.match(/^#\/post\/(.+)$/);
     if (match) {
       renderPost(decodeURIComponent(match[1]));

@@ -3,22 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#f5f4f0" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)" />
   <meta name="robots" content="noindex" />
   <title>Administración — Fraguío</title>
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="admin.css" />
 </head>
 <body>
-  <div class="container">
-    <a class="nav-link" href="/">← Volver</a>
-    <div class="admin-box">
-      <h1 class="post-title">Administración</h1>
-      <form id="admin-form">
-        <input type="password" id="admin-pass" placeholder="Contraseña" autofocus autocomplete="current-password" />
-        <button type="submit">Entrar</button>
+  <header class="brand">Fraguío</header>
+
+  <main class="admin">
+    <div class="admin__box">
+      <h1 class="admin__title">Administración</h1>
+      <form id="admin-form" class="admin__form">
+        <input
+          type="password"
+          id="admin-pass"
+          class="admin__input"
+          placeholder="Contraseña"
+          aria-label="Contraseña"
+          autofocus
+          autocomplete="current-password"
+        />
+        <button type="submit" class="admin__submit">Entrar</button>
       </form>
-      <p id="admin-error" class="admin-error" hidden>Contraseña incorrecta.</p>
+      <p id="admin-error" class="admin__error" hidden>Contraseña incorrecta.</p>
     </div>
-  </div>
+    <a class="admin__back" href="../">← Volver</a>
+  </main>
+
   <script>
     document.getElementById('admin-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -26,7 +41,7 @@
       const errorEl = document.getElementById('admin-error');
       errorEl.hidden = true;
       try {
-        const cfg = await (await fetch('/admin.json', { cache: 'no-store' })).json();
+        const cfg = await (await fetch('../admin.json', { cache: 'no-store' })).json();
         const b = (s) => Uint8Array.from(atob(s), c => c.charCodeAt(0));
         const enc = new TextEncoder();
         const baseKey = await crypto.subtle.importKey('raw', enc.encode(pass), 'PBKDF2', false, ['deriveKey']);

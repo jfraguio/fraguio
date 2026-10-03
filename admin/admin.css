@@ -1,0 +1,173 @@
+@font-face {
+  font-family: 'iA Writer Quattro';
+  src: url('../fonts/iAWriterQuattroS-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #f5f4f0;
+  --fg: #2a2a2a;
+  --fg-dim: #9c9a94;
+  --fg-faint: #c9c7c1;
+  --rule: #e3e1db;
+  --err: #c97a7a;
+  --font: 'iA Writer Quattro', 'IBM Plex Sans', system-ui, sans-serif;
+  --ui: 18px;
+  --line-height: 1.65;
+  --ease: 140ms ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111111;
+    --fg: #d6d3cc;
+    --fg-dim: #66645f;
+    --fg-faint: #3a3936;
+    --rule: #2a2927;
+    --err: #a86b6b;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: var(--ui);
+  line-height: var(--line-height);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition:
+    background-color var(--ease),
+    color var(--ease);
+}
+
+.brand {
+  position: fixed;
+  top: 1.7rem;
+  left: 1.9rem;
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  user-select: none;
+}
+
+.admin {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.75rem;
+  padding: 6rem 1.5rem;
+}
+
+.admin__box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(24rem, 100%);
+}
+
+.admin__title {
+  margin: 0 0 2rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.admin__form {
+  display: flex;
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.admin__input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 0.95rem;
+  padding: 0.6rem 0.75rem;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  transition:
+    border-color var(--ease),
+    background-color var(--ease);
+}
+
+.admin__input::placeholder {
+  color: var(--fg-dim);
+}
+
+.admin__input:focus {
+  outline: none;
+  border-color: var(--fg-dim);
+}
+
+.admin__submit {
+  font: inherit;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.15rem;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--fg);
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    color var(--ease),
+    background-color var(--ease);
+}
+
+@media (hover: hover) {
+  .admin__submit:hover {
+    color: var(--bg);
+    background: var(--fg);
+  }
+}
+
+.admin__error {
+  margin: 1.1rem 0 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  color: var(--err);
+}
+
+.admin__back {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--fg-faint);
+  transition: color var(--ease);
+}
+
+@media (hover: hover) {
+  .admin__back:hover {
+    color: var(--fg-dim);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ease: 0s;
+  }
+}
